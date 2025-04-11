@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocumentChat - Chatbots inteligentes para tus documentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Document<span class="text-primary">Chat</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Características</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">Cómo funciona</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="/dashboard">Iniciar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-3">Convierte tus documentos en chatbots inteligentes</h1>
+                    <p class="lead text-secondary mb-4">
+                        Crea chatbots interactivos basados en tus documentos. Responde preguntas de tus clientes o usuarios de forma automática con la potencia de la IA.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="/dashboard" class="btn btn-primary btn-lg px-4">Crear mi chatbot</a>
+                        <a href="#how-it-works" class="btn btn-outline-secondary btn-lg px-4">Cómo funciona</a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <div class="bg-light rounded-4 p-3 p-md-5 shadow-sm">
+                            <div class="mb-4 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-robot text-white"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0 fw-bold">DocumentChat</h6>
+                                        <small class="text-muted">En línea</small>
+                                    </div>
+                                </div>
+                                <div>
+                                    <i class="bi bi-x-lg"></i>
+                                </div>
+                            </div>
+                            <div class="chat-bubble bot mb-3">
+                                Hola, soy el asistente de este documento. ¿En qué puedo ayudarte?
+                            </div>
+                            <div class="chat-bubble user mb-3">
+                                ¿Cuáles son los requisitos para aplicar?
+                            </div>
+                            <div class="chat-bubble bot mb-3">
+                                Según el documento, los requisitos para aplicar son:
+                                <br><br>
+                                1. Ser mayor de 18 años
+                                <br>
+                                2. Presentar identificación vigente
+                                <br>
+                                3. Comprobante de domicilio reciente
+                                <br>
+                                4. Completar el formulario de solicitud en línea
+                            </div>
+                            <div class="mt-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Escribe tu pregunta aquí...">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-send"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="py-5 bg-light">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Características principales</h2>
+                <p class="lead text-secondary mx-auto" style="max-width: 700px;">
+                    DocumentChat transforma tus documentos en chatbots inteligentes, ofreciendo una nueva forma de interactuar con tu contenido.
+                </p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-file-earmark-text fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Múltiples formatos</h4>
+                        <p class="text-secondary mb-0">
+                            Soporta documentos PDF, DOCX y TXT para adaptarse a tus necesidades.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-robot fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Respuestas IA</h4>
+                        <p class="text-secondary mb-0">
+                            Utiliza modelos avanzados de IA para generar respuestas precisas y relevantes.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-brush fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Personalizable</h4>
+                        <p class="text-secondary mb-0">
+                            Adapta el aspecto y comportamiento del chatbot a tu marca y necesidades.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-code-slash fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Integración sencilla</h4>
+                        <p class="text-secondary mb-0">
+                            Añade el chatbot a tu sitio web con un simple fragmento de código.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-clock-history fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Disponible 24/7</h4>
+                        <p class="text-secondary mb-0">
+                            Tu chatbot estará disponible para tus usuarios en todo momento.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up fs-4"></i>
+                        </div>
+                        <h4 class="mb-2 fw-bold">Analíticas</h4>
+                        <p class="text-secondary mb-0">
+                            Conoce las preguntas más frecuentes y el rendimiento de tu chatbot.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="py-5">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Cómo funciona</h2>
+                <p class="lead text-secondary mx-auto" style="max-width: 700px;">
+                    Crear e implementar tu chatbot es un proceso sencillo que solo toma unos minutos.
+                </p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="how-it-works-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4 class="fw-bold">Sube tu documento</h4>
+                            <p class="text-secondary">
+                                Sube el documento sobre el que quieres que tu chatbot responda preguntas. Soportamos PDF, DOCX y TXT.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="how-it-works-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4 class="fw-bold">Personaliza tu chatbot</h4>
+                            <p class="text-secondary">
+                                Configura el nombre, colores, mensaje de bienvenida y otros aspectos para adaptarlo a tu marca.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="how-it-works-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4 class="fw-bold">Prueba tu chatbot</h4>
+                            <p class="text-secondary">
+                                Haz algunas preguntas sobre el contenido de tu documento para verificar que el chatbot responde correctamente.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="how-it-works-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4 class="fw-bold">Integra en tu sitio web</h4>
+                            <p class="text-secondary">
+                                Copia el código de integración y pégalo en tu sitio web para que tus visitantes puedan interactuar con el chatbot.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="/dashboard" class="btn btn-primary btn-lg px-4">Empezar ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-primary text-white">
+        <div class="container py-4 text-center">
+            <h2 class="fw-bold mb-4">Comienza a crear tu chatbot hoy mismo</h2>
+            <p class="lead mb-4 mx-auto" style="max-width: 700px;">
+                Transforma tus documentos en asistentes virtuales inteligentes y ofrece a tus usuarios una nueva forma de interactuar con tu información.
+            </p>
+            <a href="/dashboard" class="btn btn-light btn-lg px-4">Crear mi primer chatbot</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="fw-bold mb-3">DocumentChat</h5>
+                    <p class="text-secondary">
+                        Chatbots inteligentes basados en tus documentos, impulsados por IA avanzada.
+                    </p>
+                </div>
+                <div class="col-md-4 col-lg-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Producto</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#features" class="text-decoration-none text-secondary">Características</a></li>
+                        <li class="mb-2"><a href="#how-it-works" class="text-decoration-none text-secondary">Cómo funciona</a></li>
+                        <li class="mb-2"><a href="/dashboard" class="text-decoration-none text-secondary">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Recursos</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Documentación</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Tutoriales</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 col-lg-2">
+                    <h6 class="fw-bold mb-3">Empresa</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Acerca de</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none text-secondary">Términos</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <h6 class="fw-bold mb-3">Síguenos</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-secondary fs-5"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-secondary fs-5"><i class="bi bi-linkedin"></i></a>
+                        <a href="#" class="text-secondary fs-5"><i class="bi bi-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <p class="text-secondary mb-0">&copy; 2025 DocumentChat. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .chat-bubble.bot {
+            background-color: #f1f1f1;
+            color: #333;
+            border-top-left-radius: 4px;
+            align-self: flex-start;
+        }
+        
+        .chat-bubble.user {
+            background-color: var(--primary-color);
+            color: white;
+            border-top-right-radius: 4px;
+            margin-left: auto;
+        }
+        
+        .rounded-4 {
+            border-radius: 1rem!important;
+        }
+    </style>
+</body>
+</html>
