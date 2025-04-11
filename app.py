@@ -1,8 +1,9 @@
 # app.py
 from fastapi import FastAPI, File, UploadFile, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import uvicorn
 import os
@@ -17,6 +18,7 @@ import re
 # Configuración
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "your_deepseek_api_key_here")
 DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
 
 app = FastAPI(title="Chatbot de Documentos Inteligente")
 
@@ -162,29 +164,8 @@ async def query_deepseek(question, document_text, chat_history=[]):
 # Página principal con HTML básico 
 @app.get("/", response_class=HTMLResponse)
 async def get_home():
-    # Leeremos el HTML desde un archivo estático más adelante
-    # Por ahora, devolvemos una página simple con redirección al dashboard
-    return """
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>DocumentChat - Chatbots inteligentes para tus documentos</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/static/css/main.css">
-    </head>
-    <body>
-        <div class="container py-5">
-            <div class="text-center mb-5">
-                <h1 class="display-4">DocumentChat</h1>
-                <p class="lead">Crea chatbots inteligentes a partir de tus documentos</p>
-                <a href="/dashboard" class="btn btn-primary btn-lg mt-3">Ir al Dashboard</a>
-            </div>
-        </div>
-    </body>
-    </html>
-    """
+    with open("static/index.html", "r", encoding="utf-8") as f:
+        return f.read()
 
 # Dashboard para gestionar chatbots
 @app.get("/dashboard", response_class=HTMLResponse)
@@ -429,343 +410,25 @@ async def ask_question(question_data: Question):
 
 # Widget JavaScript para incrustar en sitios web
 @app.get("/api/widget/{chatbot_id}.js")
-async def get_widget_script(chatbot_id: str):
+async def get_widget_script(chatbot_id: str, request: Request):
     if chatbot_id not in chatbots:
         raise HTTPException(status_code=404, detail="Chatbot no encontrado")
     
     config = chatbots[chatbot_id]
     
-    # Generar script personalizado para el chatbot
-    script = f"""
-    // DocumentChat Widget v1.0
-    (function() {{
-        const chatbotId = "{chatbot_id}";
-        const primaryColor = "{config['primary_color']}";
-        const welcomeMessage = "{config['welcome_message']}";
-        const placeholderText = "{config['placeholder_text']}";
-        
-        // Crear estilos
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .dc-widget-container {{
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 9999;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-            }}
-            .dc-chat-button {{
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                background-color: {config['primary_color']};
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-                transition: all 0.3s ease;
-            }}
-            .dc-chat-button:hover {{
-                transform: scale(1.05);
-            }}
-            .dc-chat-window {{
-                display: none;
-                position: fixed;
-                bottom: 90px;
-                right: 20px;
-                width: 350px;
-                height: 500px;
-                background-color: white;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-                flex-direction: column;
-            }}
-            .dc-chat-header {{
-                background-color: {config['primary_color']};
-                color: white;
-                padding: 15px;
-                font-weight: 500;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }}
-            .dc-chat-close {{
-                cursor: pointer;
-                opacity: 0.8;
-            }}
-            .dc-chat-close:hover {{
-                opacity: 1;
-            }}
-            .dc-chat-messages {{
-                flex: 1;
-                padding: 15px;
-                overflow-y: auto;
-            }}
-            .dc-message {{
-                margin-bottom: 10px;
-                max-width: 80%;
-                padding: 10px 14px;
-                border-radius: 18px;
-                line-height: 1.4;
-                word-wrap: break-word;
-                position: relative;
-            }}
-            .dc-bot-message {{
-                background-color: #f1f1f1;
-                color: #333;
-                border-top-left-radius: 4px;
-                margin-right: auto;
-            }}
-            .dc-user-message {{
-                background-color: {config['primary_color']};
-                color: white;
-                border-top-right-radius: 4px;
-                margin-left: auto;
-            }}
-            .dc-chat-input-container {{
-                border-top: 1px solid #eaeaea;
-                padding: 12px;
-                display: flex;
-            }}
-            .dc-chat-input {{
-                flex: 1;
-                padding: 10px 14px;
-                border: 1px solid #ddd;
-                border-radius: 20px;
-                outline: none;
-                font-size: 14px;
-            }}
-            .dc-chat-input:focus {{
-                border-color: {config['primary_color']};
-            }}
-            .dc-send-button {{
-                margin-left: 8px;
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background-color: {config['primary_color']};
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                border: none;
-            }}
-            .dc-send-button:disabled {{
-                opacity: 0.5;
-                cursor: not-allowed;
-            }}
-            .dc-loading {{
-                display: flex;
-                padding: 10px;
-                align-items: center;
-            }}
-            .dc-loading-dots {{
-                display: flex;
-            }}
-            .dc-loading-dots span {{
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background-color: #888;
-                margin: 0 2px;
-                animation: dc-loading 1.4s infinite ease-in-out both;
-            }}
-            .dc-loading-dots span:nth-child(1) {{
-                animation-delay: -0.32s;
-            }}
-            .dc-loading-dots span:nth-child(2) {{
-                animation-delay: -0.16s;
-            }}
-            @keyframes dc-loading {{
-                0%, 80%, 100% {{ transform: scale(0); }}
-                40% {{ transform: scale(1); }}
-            }}
-        `;
-        document.head.appendChild(style);
-        
-        // Crear el HTML del widget
-        const container = document.createElement('div');
-        container.className = 'dc-widget-container';
-        
-        // Botón de chat
-        const chatButton = document.createElement('div');
-        chatButton.className = 'dc-chat-button';
-        chatButton.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
-        container.appendChild(chatButton);
-        
-        // Ventana de chat
-        const chatWindow = document.createElement('div');
-        chatWindow.className = 'dc-chat-window';
-        
-        // Encabezado
-        const chatHeader = document.createElement('div');
-        chatHeader.className = 'dc-chat-header';
-        chatHeader.innerHTML = `
-            <div>DocumentChat</div>
-            <div class="dc-chat-close">✕</div>
-        `;
-        chatWindow.appendChild(chatHeader);
-        
-        // Contenedor de mensajes
-        const messagesContainer = document.createElement('div');
-        messagesContainer.className = 'dc-chat-messages';
-        chatWindow.appendChild(messagesContainer);
-        
-        // Contenedor de entrada
-        const inputContainer = document.createElement('div');
-        inputContainer.className = 'dc-chat-input-container';
-        inputContainer.innerHTML = `
-            <input type="text" class="dc-chat-input" placeholder="${placeholderText}">
-            <button class="dc-send-button" disabled>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-            </button>
-        `;
-        chatWindow.appendChild(inputContainer);
-        
-        container.appendChild(chatWindow);
-        document.body.appendChild(container);
-        
-        // Funcionalidad
-        const chatInput = document.querySelector('.dc-chat-input');
-        const sendButton = document.querySelector('.dc-send-button');
-        let chatHistory = [];
-        
-        // Mensaje de bienvenida
-        function addWelcomeMessage() {{
-            const welcomeDiv = document.createElement('div');
-            welcomeDiv.className = 'dc-message dc-bot-message';
-            welcomeDiv.textContent = welcomeMessage;
-            messagesContainer.appendChild(welcomeDiv);
-        }}
-        
-        // Mostrar mensaje de carga
-        function showLoading() {{
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'dc-message dc-bot-message dc-loading';
-            loadingDiv.innerHTML = `
-                <div class="dc-loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            `;
-            loadingDiv.id = 'dc-loading-indicator';
-            messagesContainer.appendChild(loadingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }}
-        
-        // Ocultar mensaje de carga
-        function hideLoading() {{
-            const loadingDiv = document.getElementById('dc-loading-indicator');
-            if (loadingDiv) {{
-                loadingDiv.remove();
-            }}
-        }}
-        
-        // Añadir un mensaje al chat
-        function addMessage(content, isUser = false) {{
-            const messageDiv = document.createElement('div');
-            messageDiv.className = isUser ? 'dc-message dc-user-message' : 'dc-message dc-bot-message';
-            messageDiv.textContent = content;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }}
-        
-        // Enviar pregunta al servidor
-        async function sendQuestion(question) {{
-            try {{
-                showLoading();
-                
-                const response = await fetch('{os.environ.get("BASE_URL", "https://your-app-url.com")}/api/ask-question/', {{
-                    method: 'POST',
-                    headers: {{
-                        'Content-Type': 'application/json',
-                    }},
-                    body: JSON.stringify({{
-                        question: question,
-                        document_id: "{config['document_id']}",
-                        chat_history: chatHistory
-                    }})
-                }});
-                
-                hideLoading();
-                
-                if (response.ok) {{
-                    const data = await response.json();
-                    addMessage(data.answer);
-                    
-                    // Añadir a historial
-                    chatHistory.push({{
-                        question: question,
-                        answer: data.answer
-                    }});
-                    
-                    // Mantener historial manejable
-                    if (chatHistory.length > 10) {{
-                        chatHistory.shift();
-                    }}
-                }} else {{
-                    const error = await response.json();
-                    addMessage('Lo siento, hubo un problema al procesar tu pregunta.');
-                    console.error('Error:', error);
-                }}
-            }} catch (error) {{
-                hideLoading();
-                addMessage('Lo siento, no pude conectarme con el servidor. Por favor intenta de nuevo más tarde.');
-                console.error('Error:', error);
-            }}
-        }}
-        
-        // Event listeners
-        chatButton.addEventListener('click', () => {{
-            chatWindow.style.display = 'flex';
-            chatButton.style.display = 'none';
-            
-            // Si no hay mensajes, añadir mensaje de bienvenida
-            if (messagesContainer.children.length === 0) {{
-                addWelcomeMessage();
-            }}
-            
-            chatInput.focus();
-        }});document.querySelector('.dc-chat-close').addEventListener('click', () => {
-            chatWindow.style.display = 'none';
-            chatButton.style.display = 'flex';
-        });
-        
-        chatInput.addEventListener('input', () => {
-            sendButton.disabled = chatInput.value.trim() === '';
-        });
-        
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && chatInput.value.trim() !== '') {
-                const question = chatInput.value.trim();
-                addMessage(question, true);
-                chatInput.value = '';
-                sendButton.disabled = true;
-                sendQuestion(question);
-            }
-        });
-        
-        sendButton.addEventListener('click', () => {
-            if (chatInput.value.trim() !== '') {
-                const question = chatInput.value.trim();
-                addMessage(question, true);
-                chatInput.value = '';
-                sendButton.disabled = true;
-                sendQuestion(question);
-            }
-        });
-    }})();
-    """
+    # Leer el archivo de plantilla del widget
+    with open("static/js/widget-template.js", "r") as f:
+        widget_js = f.read()
     
-    return Response(content=script, media_type="application/javascript")
+    # Reemplazar variables en la plantilla
+    widget_js = widget_js.replace("{{CHATBOT_ID}}", chatbot_id)
+    widget_js = widget_js.replace("{{PRIMARY_COLOR}}", config["primary_color"])
+    widget_js = widget_js.replace("{{WELCOME_MESSAGE}}", config["welcome_message"])
+    widget_js = widget_js.replace("{{PLACEHOLDER_TEXT}}", config["placeholder_text"])
+    widget_js = widget_js.replace("{{DOCUMENT_ID}}", config["document_id"])
+    widget_js = widget_js.replace("{{BASE_URL}}", BASE_URL)
+    
+    return Response(content=widget_js, media_type="application/javascript")
 
 # Ruta para obtener el código de integración del widget
 @app.get("/api/chatbots/{chatbot_id}/embed")
@@ -774,7 +437,7 @@ async def get_embed_code(chatbot_id: str, request: Request):
         raise HTTPException(status_code=404, detail="Chatbot no encontrado")
     
     # Obtener la URL base de la solicitud
-    base_url = str(request.base_url).rstrip('/')
+    base_url = BASE_URL
     
     # Generar el código de integración
     embed_code = f"""
